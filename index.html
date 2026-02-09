@@ -29,11 +29,14 @@
             width: 150px;
             font-weight: bold;
         }
-        input {
+        input,select {
             padding: 8px;
             width: 120px;
             border: 1px solid #ddd;
             border-radius: 4px;
+        }
+        select {
+            width: 134px;
         }
         .error {
             color: #e74c3c;
@@ -83,7 +86,11 @@
     <div class="calculator">
         <div class="input-group">
             <label for="Quanshuxing">全属性加成（%）：</label>
-            <input type="number" id="Quanshuxing" placeholder="最高全属性加成" min="0">
+            <select name="Quan" id="Quanshuxing">
+                <option value="12.2">12.2</option>
+                <option value="16.2">16.2</option>
+                <option value="20.3">20.3</option>
+            </select>
             <span class="error" id="baseError">请输入有效数值</span>
         </div>
         
