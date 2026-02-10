@@ -1,208 +1,272 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>忍者加成战力计算器</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #e74c3c;
-            text-align: center;
-        }
-        .calculator {
-            background-color: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: inline-block;
-            width: 150px;
-            font-weight: bold;
-        }
-        input,select {
-            padding: 8px;
-            width: 120px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        select {
-            width: 134px;
-        }
-        .error {
-            color: #e74c3c;
-            font-size: 12px;
-            margin-left: 10px;
-            display: none;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
-        }
-        th {
-            background-color: #e74c3c;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .total {
-            font-weight: bold;
-            font-size: 18px;
-            background-color: #f0f8ff;
-        }
-        button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #c0392b;
-        }
+      body {
+        font-family: "Arial", sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      h1 {
+        color: #e74c3c;
+        text-align: center;
+      }
+      .calculator {
+        background-color: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .input-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: inline-block;
+        width: 150px;
+        font-weight: bold;
+      }
+      input,
+      select {
+        padding: 8px;
+        width: 120px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      select {
+        width: 134px;
+      }
+      .error {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-left: 10px;
+        display: none;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+      }
+      th {
+        background-color: #e74c3c;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      .total {
+        font-weight: bold;
+        font-size: 18px;
+        background-color: #f0f8ff;
+      }
+      button {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+      button:hover {
+        background-color: #c0392b;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>忍者加成战力计算器</h1>
     <div class="calculator">
-        <div class="input-group">
-            <label for="Quanshuxing">全属性加成（%）：</label>
-            <select name="Quan" id="Quanshuxing">
-                <option value="12.2">12.2</option>
-                <option value="16.2">16.2</option>
-                <option value="20.3">20.3</option>
-            </select>
-            <span class="error" id="baseError">请输入有效数值</span>
-        </div>
-        
-        <div class="input-group">
-            <label for="shengming">生命收集（%）：</label>
-            <input type="number" id="shengming" placeholder="输入生命百分比" min="0" max="1000">
-            <span class="error" id="lifeError">请输入0-1000的数值</span>
-        </div>
-        
-        <div class="input-group">
-            <label for="gongji">攻击收集（%）：</label>
-            <input type="number" id="gongji" placeholder="输入攻击百分比" min="0" max="1000">
-            <span class="error" id="attackError">请输入0-1000的数值</span>
-        </div>
-        
-        <div class="input-group">
-            <label for="fangyu">防御收集（%）：</label>
-            <input type="number" id="fangyu" placeholder="输入防御百分比" min="0" max="1000">
-            <span class="error" id="defendError">请输入0-1000的数值</span>
-        </div>
-        
-        <button onclick="calculatePower()">计算最终战力</button>
-        
-        <table id="resultTable">
-            <thead>
-                <tr>
-                    <th>计算项目</th>
-                    <th>数值</th>
-                    <th>当前战力</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>生命</td>
-                    <td><input type="number" id="sheng" placeholder="当前加多少生命值" value="1"></td>
-                    <td id="tablelife">0</td>
-                </tr>
-                <tr>
-                    <td>攻击</td>
-                    <td><input type="number" id="gong" placeholder="当前加多少攻击值" value="1"></td>
-                    <td id="tableattack">0</td>
-                </tr>
-                <tr>
-                    <td>防御</td>
-                    <td><input type="number" id="fang" placeholder="当前加多少防御值" value="1"></td>
-                    <td id="tabledefend">0</td>
-                </tr>
-                <tr class="total">
-                    <td colspan="2">总战力（具体战力需要以游戏为准）</td>
-                    <td id="tableTotal">0</td>
-                </tr>
-            </tbody>
-            
-        </table>
-        
+      <div class="input-group">
+        <label for="Quanshuxing">全属性加成（%）：</label>
+        <select name="Quan" id="Quanshuxing">
+          <option value="12.2">12.2</option>
+          <option value="16.2">16.2</option>
+          <option value="20.3">20.3</option>
+        </select>
+        <span class="error" id="baseError">请输入有效数值</span>
+      </div>
+
+      <div class="input-group">
+        <label for="shengming">生命收集（%）：</label>
+        <input
+          type="number"
+          id="shengming"
+          placeholder="输入生命百分比"
+          min="0"
+          max="1000"
+        />
+        <span class="error" id="lifeError">请输入0-1000的数值</span>
+      </div>
+
+      <div class="input-group">
+        <label for="gongji">攻击收集（%）：</label>
+        <input
+          type="number"
+          id="gongji"
+          placeholder="输入攻击百分比"
+          min="0"
+          max="1000"
+        />
+        <span class="error" id="attackError">请输入0-1000的数值</span>
+      </div>
+
+      <div class="input-group">
+        <label for="fangyu">防御收集（%）：</label>
+        <input
+          type="number"
+          id="fangyu"
+          placeholder="输入防御百分比"
+          min="0"
+          max="1000"
+        />
+        <span class="error" id="defendError">请输入0-1000的数值</span>
+      </div>
+
+      <button onclick="calculatePower()">计算最终战力</button>
+
+      <table id="resultTable">
+        <thead>
+          <tr>
+            <th>计算项目</th>
+            <th>数值</th>
+            <th>当前战力</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>生命</td>
+            <td>
+              <input
+                type="number"
+                id="sheng"
+                placeholder="当前加多少生命值"
+                value=""
+              />
+            </td>
+            <td id="tablelife">0</td>
+          </tr>
+          <tr>
+            <td>攻击</td>
+            <td>
+              <input
+                type="number"
+                id="gong"
+                placeholder="当前加多少攻击值"
+                value=""
+              />
+            </td>
+            <td id="tableattack">0</td>
+          </tr>
+          <tr>
+            <td>防御</td>
+            <td>
+              <input
+                type="number"
+                id="fang"
+                placeholder="当前加多少防御值"
+                value=""
+              />
+            </td>
+            <td id="tabledefend">0</td>
+          </tr>
+          <tr class="total">
+            <td colspan="2">总战力（具体战力需要以游戏为准）</td>
+            <td id="tableTotal">0</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-<script>
-    
-        function calculatePower() {
-            // 获取输入值
-            const Quanshuxing = parseFloat(document.getElementById('Quanshuxing').value);
-            const shengming = parseFloat(document.getElementById('shengming').value);
-            const gongji = parseFloat(document.getElementById('gongji').value);
-            const fangyu = parseFloat(document.getElementById('fangyu').value);
-            const sheng = parseFloat(document.getElementById('sheng').value);
-            const gong = parseFloat(document.getElementById('gong').value);
-            const fang = parseFloat(document.getElementById('fang').value);
-            // 验证输入
-            let isValid = true;
-            
-            if (isNaN(Quanshuxing) || Quanshuxing <= 0) {
-                document.getElementById('baseError').style.display = 'inline';
-                isValid = false;
-            } else {
-                document.getElementById('baseError').style.display = 'none';
-            }
-            
-            if (isNaN(shengming) || shengming <= 0 || shengming > 1000) {
-                document.getElementById('lifeError').style.display = 'inline';
-                isValid = false;
-            } else {
-                document.getElementById('lifeError').style.display = 'none';
-            }
-            
-            if (isNaN(gongji) || gongji < 0 || gongji > 1000) {
-                document.getElementById('attackError').style.display = 'inline';
-                isValid = false;
-            } else {
-                document.getElementById('attackError').style.display = 'none';
-            }
-            
-            if (isNaN(fangyu) || fangyu < 0 || fangyu > 1000) {
-                document.getElementById('defendError').style.display = 'inline';
-                isValid = false;
-            } else {
-                document.getElementById('defendError').style.display = 'none';
-            }
-            
-            if (!isValid) return;
-            
-            // 计算各阶段战力
-            const Shengming = (1*(1+ (Quanshuxing/100)+(Quanshuxing/100)*(shengming/100)))*sheng;
-            const Gongji = (3.5*(1+ (Quanshuxing/100)+(Quanshuxing/100)*(gongji/100)))*gong;
-            const Fangyu = (11.6*(1+ (Quanshuxing/100)+(Quanshuxing/100)*(fangyu/100)))*fang;
-            const elementPower =Shengming+Gongji +Fangyu;
-            
-            // 更新表格
-            document.getElementById('tablelife').textContent = Shengming.toFixed(0);
-            document.getElementById('tableattack').textContent = Gongji.toFixed(0);
-            document.getElementById('tabledefend').textContent = Fangyu.toFixed(0);
-            document.getElementById('tableTotal').textContent = elementPower.toFixed(0);
+    <script>
+      function calculatePower() {
+        // 获取输入值
+        const Quanshuxing = parseFloat(
+          document.getElementById("Quanshuxing").value,
+        );
+        const shengming =
+          parseFloat(document.getElementById("shengming").value) || 0;
+        const gongji = parseFloat(document.getElementById("gongji").value) || 0;
+        const fangyu = parseFloat(document.getElementById("fangyu").value) || 0;
+        const sheng = parseFloat(document.getElementById("sheng").value) || 0;
+        const gong = parseFloat(document.getElementById("gong").value) || 0;
+        const fang = parseFloat(document.getElementById("fang").value) || 0;
+        // 验证输入
+        let isValid = true;
+
+        if (isNaN(Quanshuxing) || Quanshuxing <= 0) {
+          document.getElementById("baseError").style.display = "inline";
+          isValid = false;
+        } else {
+          document.getElementById("baseError").style.display = "none";
         }
-</script>
-</body>
+
+        if (shengming < 0 || shengming > 1000) {
+          document.getElementById("lifeError").style.display = "inline";
+          isValid = false;
+        } else {
+          document.getElementById("lifeError").style.display = "none";
+        }
+
+        if (gongji < 0 || gongji > 1000) {
+          document.getElementById("attackError").style.display = "inline";
+          isValid = false;
+        } else {
+          document.getElementById("attackError").style.display = "none";
+        }
+
+        if (fangyu < 0 || fangyu > 1000) {
+          document.getElementById("defendError").style.display = "inline";
+          isValid = false;
+        } else {
+          document.getElementById("defendError").style.display = "none";
+        }
+
+        if (!isValid) return;
+
+        // 计算各阶段战力，处理0值情况
+        const Shengming =
+          shengming === 0 && sheng === 0
+            ? 0
+            : 1 *
+              (1 +
+                Quanshuxing / 100 +
+                (Quanshuxing / 100) * (shengming / 100)) *
+              sheng;
+        const Gongji =
+          gongji === 0 && gong === 0
+            ? 0
+            : 3.5 *
+              (1 + Quanshuxing / 100 + (Quanshuxing / 100) * (gongji / 100)) *
+              gong;
+        const Fangyu =
+          fangyu === 0 && fang === 0
+            ? 0
+            : 11.6 *
+              (1 + Quanshuxing / 100 + (Quanshuxing / 100) * (fangyu / 100)) *
+              fang;
+
+        // 计算总战力，如果生命、攻击、防御均为0则总战力为0
+        const elementPower =
+          Shengming === 0 && Gongji === 0 && Fangyu === 0
+            ? 0
+            : Shengming + Gongji + Fangyu;
+
+        // 更新表格
+        document.getElementById("tablelife").textContent = Shengming.toFixed(0);
+        document.getElementById("tableattack").textContent = Gongji.toFixed(0);
+        document.getElementById("tabledefend").textContent = Fangyu.toFixed(0);
+        document.getElementById("tableTotal").textContent =
+          elementPower.toFixed(0);
+      }
+    </script>
+  </body>
 </html>
